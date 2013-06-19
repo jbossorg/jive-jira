@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="jbossJira">
+	<table name="jbossJiraIssueLink" description="Link between JIRA and SBS object">
+		<column name="id" type="bigint" nullable="false" description="Primary key"/>
+		<column name="objectType" type="int" nullable="false" description="Ojbect Type"/>
+		<column name="objectID" type="bigint" nullable="false" description="Ojbect ID"/>
+		<column name="issueID" type="varchar" size="50" nullable="false" description="Issue ID"/>
+		<index type="primary" name="jbossJiraLink_pk" column="id"/>
+		<index type="normal" name="jbossJiraLink_objectTypId_idx" column="objectType, objectID"/>
+	</table>
+</schema>

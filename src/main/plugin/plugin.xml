@@ -1,0 +1,23 @@
+<plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://www.jivesoftware.com/schemas/clearspace/1_1/plugin.xsd">
+  <name>jira</name>
+  <description>JIRA integration</description>
+  <author>JBoss Community</author>
+  <version>1.3.1</version>
+  <minServerVersion>4.5.0</minServerVersion>
+
+  <databaseKey>jboss-jira</databaseKey>
+  <databaseVersion>1</databaseVersion>
+
+  <components>
+    <component id="admin-console">
+      <tab id="system">
+        <section id="section-system">
+          <item id="system-jira-admin" name="plugin.jira.admin.name"
+            url="jira-integration-view.jspa" description="plugin.jira.admin.description" />
+        </section>
+      </tab>
+    </component>
+  </components>
+
+</plugin>

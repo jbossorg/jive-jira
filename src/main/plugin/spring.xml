@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	   xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd"
+	   default-autowire="no" default-init-method="init" default-destroy-method="destroy">
+
+	<bean id="jiraManager" class="org.jboss.community.sbs.plugin.jira.DbJiraManager">
+		<property name="issueLinkDAO" ref="issueLinkDAO"/>
+		<property name="jiveObjectLoader" ref="jiveObjectLoader"/>
+		<property name="remoteJiraManager" ref="remoteJiraManager"/>
+		<property name="jiveContext" ref="jiveContext"/>
+		<property name="jiraDAO" ref="jiraDAO"/>
+		<property name="issueLinkCache" ref="issueLinkCache"/>
+	</bean>
+
+	<bean id="issueLinkCache" parent="cacheBean" depends-on="cacheFactoryManager">
+		<constructor-arg value="Related Issues (JIRA) Cache"/>
+	</bean>
+
+	<bean id="remoteJiraManager" class="org.jboss.community.sbs.plugin.jira.RemoteJiraManagerImpl">
+	</bean>
+
+	<bean id="jiraManagerDwrProxy" class="org.jboss.community.sbs.plugin.jira.dwr.JiraManagerDWRProxy">
+		<property name="jiraManager" ref="jiraManager"/>
+		<property name="authenticationProvider" ref="authenticationProvider"/>
+
+		<dwr:remote javascript="JiraManager">
+			<dwr:include method="getRelatedIssues"/>
+			<dwr:include method="addLink"/>
+			<dwr:include method="removeLink"/>
+		</dwr:remote>
+	</bean>
+
+	<bean id="issueLinkDAO" class="org.jboss.community.sbs.plugin.jira.dao.DbIssueLinkDAOImpl">
+		<property name="dataSource">
+			<util:property-path path="dataSourceFactory.dataSource"/>
+		</property>
+	</bean>
+
+	<bean id="jiraDAO" class="org.jboss.community.sbs.plugin.jira.dao.DbJiraDAO">
+		<property name="dataSource">
+			<util:property-path path="dataSourceFactory.dataSource"/>
+		</property>
+	</bean>
+
+</beans>
