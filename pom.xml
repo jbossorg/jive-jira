@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jboss.sbs</groupId>
 	<artifactId>jira</artifactId>
@@ -10,8 +9,8 @@
 	<description>Plugin provides SBS and JIRA integration</description>
 	<url>https://github.com/jbossorg/jive-jira</url>
 	<version>1.3.1</version>
-	<inceptionYear>2011</inceptionYear>
 
+	<inceptionYear>2011</inceptionYear>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -47,7 +46,7 @@
 	<properties>
 		<sbs.version>4.5.6.0</sbs.version>
 		<sbs.min.version>4.5.0.0</sbs.min.version>
-		<sbs.max.version>7.0.0.0</sbs.max.version>
+		<sbs.max.version>5.0.0.0</sbs.max.version>
 		<java.version>1.6</java.version>
 		<final.name>${project.artifactId}-${project.version}-${sbs.version}</final.name>
 	</properties>
