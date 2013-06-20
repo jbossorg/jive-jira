@@ -113,7 +113,9 @@ jive.JiraApp.JiraView = function(containerID, options) {
     function refreshIssuesData(data) {
         var fields = data.fields;
         var issueTypeID = fields.issuetype.id;
-        var statusID = fields.status.id;
+        var issueTypeIconUrl = fields.issuetype.iconUrl;
+		var statusID = fields.status.id;
+		var statusIconUrl = fields.status.iconUrl;
 
         var link = "<a href=\"" + jiraBaseURL + "/browse/" + data.key + "\" title=\"" + fields.summary + "\" target=\"_blank\">";
         if (statusID == 6) {
@@ -124,8 +126,8 @@ jive.JiraApp.JiraView = function(containerID, options) {
         link += "</a>";
         
         var row = "<td width=\"20px\"><span class=\"jira-icon jira-issuetype-" + issueTypeID + "\" title=\"" + fields.issuetype.name + 
-          "\"></span></td><td>" + link + 
-          "</td><td><span class=\"jira-icon jira-status-" + statusID + "\" title=\"" + fields.status.name + "\"></span>&nbsp;" + fields.status.name + 
+          "\" style=\"background-image: url('" + issueTypeIconUrl + "');\"></span></td><td>" + link +
+          "</td><td><span class=\"jira-icon jira-status-" + statusID + "\" title=\"" + fields.status.name + "\" style=\"background-image: url('" + statusIconUrl + "');\"></span>&nbsp;" + fields.status.name +
           "</td>";
         <#if !user.anonymous>
         row += "<td align=\"right\" id=\"jboss-jira-remove-parent-" + data.key + "\"><a class=\"jboss-jira-remove-issue\" id=\"jboss-jira-remove-" + data.key + 
@@ -419,33 +421,35 @@ jive.JiraApp.Main = function(options) {
 
 </@resource.javascript>
 
-    <div class="jive-box-header jive-sidebar-header">
-        <h4><@s.text name="plugin.jira.widget.name" /></h4>
-    </div>
-    <div class="jive-box-body jive-sidebar-body jboss-sidebar-body-jira">
-        <table id="jboss-jira-${objectType?c}-${objectID?c}" id="jboss-jira-result-table" cellpadding="1px" border="0" width="100%">
-            <tr><td><@s.text name="plugin.jira.widget.retrieve_data.text" /></td></tr>
-        </table>
-        <div id="jboss-jira-messages">
-          <div id="jboss-jira-message-error" style="display: none;"></div>
-          <div id="jboss-jira-message-info" style="display: none;"></div>
-          <div id="jboss-jira-message-warning" style="display: none;"></div>
-        </div>
-        <#if !user.anonymous>
-        <div id="jboss-jira-add-link-row">
-          <div id="jboss-jira-add-link-group">
-          <a id="jboss-jira-add-link" href="javascript:void(0)"><@s.text name="plugin.jira.widget.add_issue" /></a>
-          </div>
+    <div class="j-box" id="jboss-jive-jira-widget">
+		<header>
+			<h4><@s.text name="plugin.jira.widget.name" /></h4>
+		</header>
+		<div id="jboss-sidebar-body-jira" class="j-box-body">
+			<table id="jboss-jira-${objectType?c}-${objectID?c}" id="jboss-jira-result-table" cellpadding="1px" border="0" width="100%">
+				<tr><td><@s.text name="plugin.jira.widget.retrieve_data.text" /></td></tr>
+			</table>
+			<div id="jboss-jira-messages">
+			  <div id="jboss-jira-message-error" style="display: none;"></div>
+			  <div id="jboss-jira-message-info" style="display: none;"></div>
+			  <div id="jboss-jira-message-warning" style="display: none;"></div>
+			</div>
+			<#if !user.anonymous>
+			<div id="jboss-jira-add-link-row">
+			  <div id="jboss-jira-add-link-group">
+			  <a id="jboss-jira-add-link" href="javascript:void(0)"><@s.text name="plugin.jira.widget.add_issue" /></a>
+			  </div>
 
-          <div id="jboss-jira-add-form-group" style="display: none;">
-          <input type="text" id="jboss-jira-add-input"/>
-          <a id="jboss-jira-ok-link" href="javascript:void(0)"><@s.text name="plugin.jira.widget.ok" /></a>&nbsp;
-          <a id="jboss-jira-cancel-link" href="javascript:void(0)"><@s.text name="plugin.jira.widget.cancel" /></a>
-          </div>
-        </div>
-        <div id="jboss-jira-suggestion-position"></div>
-        </#if>
-    </div>
+			  <div id="jboss-jira-add-form-group" style="display: none;">
+			  <input type="text" id="jboss-jira-add-input"/>
+			  <a id="jboss-jira-ok-link" href="javascript:void(0)"><@s.text name="plugin.jira.widget.ok" /></a>&nbsp;
+			  <a id="jboss-jira-cancel-link" href="javascript:void(0)"><@s.text name="plugin.jira.widget.cancel" /></a>
+			  </div>
+			</div>
+			<div id="jboss-jira-suggestion-position"></div>
+			</#if>
+		</div>
+	</div>
 <@resource.javascript>
 jbossJiraApp = new jive.JiraApp.Main({
             objectType: ${objectType?c},

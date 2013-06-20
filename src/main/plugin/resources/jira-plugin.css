@@ -5,6 +5,13 @@
  */
 
 /* ---------------- JIRA widget ------------------------------------ */
+.jira-icon {
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	float: left;
+}
+
 #jboss-jira-messages div {
 	margin-top: 10px;
 }
