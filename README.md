@@ -38,20 +38,20 @@ Installation steps
 5. (Optional) Add read privileges to "jiradb.customfieldvalue" and "jiradb.jiraissue" tables for sbs db account
 6. Restart SBS
 7. Make sure that JIRA conains in JBoss Forum Reference custom field all Related Issues link from SBS (from earlier versions of plugin)
-8. Add JIRA widget to SBS Theme
- 1. template/blogs/view-sidebar.ftl
+8. Add JIRA widget to SBS Theme:
+ 1. /template/blogs/view-sidebar.ftl
 
 		<#if post?exists>
 		  <#include "/plugins/jira/resources/templates/jboss-jira-macro.ftl"/>
 		  <@jiraWidget objectType=post.objectType objectID=post.ID containerType='blog'/>
 		</#if>
 
- 2. template/docs/view-sidebar.ftl
+ 2. /template/docs/doc-sidebar.ftl
 
 		<#include "/plugins/jira/resources/templates/jboss-jira-macro.ftl"/>
 		<@jiraWidget objectType=document.objectType objectID=document.ID containerType='document'/>
 
- 3. template/forums/view-sidebar.ftl
+ 3. /template/forums/thread.ftl
 
         <#include "/plugins/jira/resources/templates/jboss-jira-macro.ftl"/>
         <@jiraWidget objectType=thread.rootMessage.objectType objectID=thread.rootMessage.ID containerType='thread'/>
