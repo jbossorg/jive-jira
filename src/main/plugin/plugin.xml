@@ -6,8 +6,8 @@
 	<authorURL>${project.developers[0].url}</authorURL>
 	<pluginURL>${project.url}</pluginURL>
 	<version>${project.version}</version>
-	<minServerVersion>${sbs.min.version}</minServerVersion>
-	<maxServerVersion>${sbs.max.version}</maxServerVersion>
+	<minServerVersion>${jive.min.version}</minServerVersion>
+	<maxServerVersion>${jive.max.version}</maxServerVersion>
 
 	<databaseKey>jboss-jira</databaseKey>
 	<databaseVersion>1</databaseVersion>

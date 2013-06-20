@@ -15,6 +15,7 @@ http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.
 		<property name="jiveContext" ref="jiveContext"/>
 		<property name="jiraDAO" ref="jiraDAO"/>
 		<property name="issueLinkCache" ref="issueLinkCache"/>
+		<property name="globalResourceResolver" ref="globalResourceResolver"/>
 	</bean>
 
 	<bean id="issueLinkCache" parent="cacheBean" depends-on="cacheFactoryManager">

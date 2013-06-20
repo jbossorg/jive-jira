@@ -11,7 +11,7 @@ import com.jivesoftware.cache.Cache;
 import com.jivesoftware.community.*;
 import com.jivesoftware.community.lifecycle.ApplicationState;
 import com.jivesoftware.community.lifecycle.ApplicationStateChangeEvent;
-import com.jivesoftware.community.web.JiveResourceResolver;
+import com.jivesoftware.community.web.GlobalResourceResolver;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -46,6 +46,8 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 	private JiveObjectLoader jiveObjectLoader;
 
 	private RemoteJiraManager remoteJiraManager;
+
+	private GlobalResourceResolver globalResourceResolver;
 
 	private JiraForumReferenceCheckerThread jiraForumReferenceCheckerThread;
 
@@ -129,7 +131,7 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 		}
 
 		// 5. Update JIRA ticket
-		final String url = JiveResourceResolver.getJiveObjectURL(jiveObject, true);
+		final String url = globalResourceResolver.getURL(jiveObject, true);
 		try {
 			String[] references = remoteJiraManager.getForumReference(issue);
 			if (references != null) {
@@ -170,7 +172,7 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 			throw new IllegalArgumentException("SBS object is not valid.");
 		}
 
-		final String url = JiveResourceResolver.getJiveObjectURL(jiveObject, true);
+		final String url = globalResourceResolver.getURL(jiveObject, true);
 
 		// 2. Update JIRA ticket
 		try {
@@ -271,8 +273,10 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 		if (!jiraCustomFieldValueURL.contains(getSbsDomain())) {
 			return null;
 		}
-		JiveObject o = JiveResourceResolver.getJiveObjectFromURL(jiveContext, jiraCustomFieldValueURL);
-		if (o == null) {
+		JiveObject o;
+		try {
+			o = globalResourceResolver.getObj(jiraCustomFieldValueURL);
+		} catch (NotFoundException e) {
 			return null;
 		}
 		// In forums root message is used
@@ -355,4 +359,7 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 		this.issueLinkCache = issueLinkCache;
 	}
 
+	public void setGlobalResourceResolver(GlobalResourceResolver globalResourceResolver) {
+		this.globalResourceResolver = globalResourceResolver;
+	}
 }
