@@ -12,6 +12,8 @@
 	<databaseKey>jboss-jira</databaseKey>
 	<databaseVersion>1</databaseVersion>
 
+	<css src="/resources/jira-plugin.css"/>
+
 	<components>
 		<component id="admin-console">
 			<tab id="system">
