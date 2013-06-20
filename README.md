@@ -40,22 +40,22 @@ Installation steps
 7. Make sure that JIRA conains in JBoss Forum Reference custom field all Related Issues link from SBS (from earlier versions of plugin)
 8. Add JIRA widget to SBS Theme:
  1. /template/blogs/view-sidebar.ftl
-
-		<#if post?exists>
-		  <#include "/plugins/jira/resources/templates/jboss-jira-macro.ftl"/>
-		  <@jiraWidget objectType=post.objectType objectID=post.ID containerType='blog'/>
-		</#if>
-
+```xml
+<#if post?exists>
+  <#include "/plugins/jira/resources/templates/jboss-jira-macro.ftl"/>
+  <@jiraWidget objectType=post.objectType objectID=post.ID containerType='blog'/>
+</#if>
+```
  2. /template/docs/doc-sidebar.ftl
-
-		<#include "/plugins/jira/resources/templates/jboss-jira-macro.ftl"/>
-		<@jiraWidget objectType=document.objectType objectID=document.ID containerType='document'/>
-
+```xml
+<#include "/plugins/jira/resources/templates/jboss-jira-macro.ftl"/>
+<@jiraWidget objectType=document.objectType objectID=document.ID containerType='document'/>
+```
  3. /template/forums/thread.ftl
-
-        <#include "/plugins/jira/resources/templates/jboss-jira-macro.ftl"/>
-        <@jiraWidget objectType=thread.rootMessage.objectType objectID=thread.rootMessage.ID containerType='thread'/>
-
+```xml
+<#include "/plugins/jira/resources/templates/jboss-jira-macro.ftl"/>
+<@jiraWidget objectType=thread.rootMessage.objectType objectID=thread.rootMessage.ID containerType='thread'/>
+```
 
 ### Data initialization
 
