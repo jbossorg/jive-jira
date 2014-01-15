@@ -27,9 +27,10 @@ public class RemoteJiraManagerTest {
 
 		assertEquals("https://community.jboss.org/message/550657#550657",
 				manager.normalizeJiraForumReference("https://community.jboss.org/message/550657#550657"));
-
+/* No more supported URL from nukes forums
 		assertEquals("https://community.jboss.org/thread/39512?tstart=0",
 				manager.normalizeJiraForumReference("http://www.jboss.org/index.html?module=bb&op=viewtopic&t=152864"));
+*/
 
 		assertEquals("https://community.jboss.org/wiki/SecureTheJmxConsole",
 				manager.normalizeJiraForumReference("http://www.jboss.org/community/docs/DOC-12190"));
