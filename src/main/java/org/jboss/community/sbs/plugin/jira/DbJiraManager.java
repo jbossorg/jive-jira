@@ -5,14 +5,11 @@
  */
 package org.jboss.community.sbs.plugin.jira;
 
-import com.atlassian.jira.rpc.soap.beans.RemoteIssue;
-import com.jivesoftware.base.event.v2.EventListener;
-import com.jivesoftware.cache.Cache;
-import com.jivesoftware.community.*;
-import com.jivesoftware.community.lifecycle.ApplicationState;
-import com.jivesoftware.community.lifecycle.ApplicationStateChangeEvent;
-import com.jivesoftware.community.web.GlobalResourceResolver;
-import edu.emory.mathcs.backport.java.util.Arrays;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.jboss.community.sbs.plugin.jira.dao.IssueLinkDAO;
@@ -21,9 +18,20 @@ import org.jboss.community.sbs.plugin.jira.dao.RelatedIssueBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.atlassian.jira.rpc.soap.beans.RemoteIssue;
+import com.jivesoftware.base.event.v2.EventListener;
+import com.jivesoftware.cache.Cache;
+import com.jivesoftware.community.ForumMessage;
+import com.jivesoftware.community.ForumThread;
+import com.jivesoftware.community.JiveConstants;
+import com.jivesoftware.community.JiveContext;
+import com.jivesoftware.community.JiveGlobals;
+import com.jivesoftware.community.JiveObject;
+import com.jivesoftware.community.JiveObjectLoader;
+import com.jivesoftware.community.NotFoundException;
+import com.jivesoftware.community.lifecycle.ApplicationState;
+import com.jivesoftware.community.lifecycle.ApplicationStateChangeEvent;
+import com.jivesoftware.community.web.GlobalResourceResolver;
 
 /**
  * DB Jira manager implementation
