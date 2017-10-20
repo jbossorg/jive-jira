@@ -13,18 +13,16 @@ import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.jboss.community.sbs.plugin.jira.dao.IssueLinkDAO;
-import org.jboss.community.sbs.plugin.jira.dao.JiraDAO;
 import org.jboss.community.sbs.plugin.jira.dao.RelatedIssueBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.atlassian.jira.rpc.soap.beans.RemoteIssue;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.jivesoftware.base.event.v2.EventListener;
 import com.jivesoftware.cache.Cache;
 import com.jivesoftware.community.ForumMessage;
 import com.jivesoftware.community.ForumThread;
 import com.jivesoftware.community.JiveConstants;
-import com.jivesoftware.community.JiveContext;
 import com.jivesoftware.community.JiveGlobals;
 import com.jivesoftware.community.JiveObject;
 import com.jivesoftware.community.JiveObjectLoader;
@@ -58,10 +56,6 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 	private GlobalResourceResolver globalResourceResolver;
 
 	private JiraForumReferenceCheckerThread jiraForumReferenceCheckerThread;
-
-	private JiveContext jiveContext;
-
-	private JiraDAO jiraDAO;
 
 	private String sbsDomain;
 
@@ -116,10 +110,10 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 
 		// 2. Check if issue exists
 		// and user has permission to this issue - this is not possible
-		RemoteIssue issue;
+		JsonNode issue;
 		try {
 			issue = remoteJiraManager.getIssue(issueID);
-			if ("6".equalsIgnoreCase(issue.getStatus())) {
+			if ("done".equalsIgnoreCase(issue.findValue("statusCategory").get("key").asText())) {
 				return RESULT.ISSUE_CLOSED.toString();
 			}
 
@@ -141,16 +135,13 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 		// 5. Update JIRA ticket
 		final String url = globalResourceResolver.getURL(jiveObject, true);
 		try {
-			String[] references = remoteJiraManager.getForumReference(issue);
+			Set<String> references = remoteJiraManager.getForumReference(issue);
 			if (references != null) {
-				@SuppressWarnings("unchecked")
-				Set<String> refs = new HashSet<String>(Arrays.asList(references));
+				references.add(url);
 
-				refs.add(url);
-
-				remoteJiraManager.updateIssueForumReference(issueID, refs.toArray(new String[refs.size()]));
+				remoteJiraManager.updateIssueForumReference(issueID, references);
 			} else {
-				remoteJiraManager.updateIssueForumReference(issueID, new String[]{url});
+				remoteJiraManager.updateIssueForumReference(issueID, new HashSet<>(Arrays.asList(url)));
 			}
 		} catch (Exception e) {
 			log.error("Cannot update JIRA Issue", e);
@@ -184,16 +175,13 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 
 		// 2. Update JIRA ticket
 		try {
-			RemoteIssue issue = remoteJiraManager.getIssue(issueID);
-			String[] references = remoteJiraManager.getForumReference(issue);
+			JsonNode issue = remoteJiraManager.getIssue(issueID);
+			Set<String> references = remoteJiraManager.getForumReference(issue);
 
 			if (references != null) {
-				@SuppressWarnings("unchecked")
-				Set<String> refs = new HashSet<String>(Arrays.asList(references));
+				references.remove(url);
 
-				refs.remove(url);
-
-				remoteJiraManager.updateIssueForumReference(issueID, refs.toArray(new String[refs.size()]));
+				remoteJiraManager.updateIssueForumReference(issueID, references);
 			} else {
 				remoteJiraManager.updateIssueForumReference(issueID, null);
 			}
@@ -215,7 +203,7 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 	public void updateLinks(int period) {
 		log.debug("Get links from JIRA");
 
-		RemoteIssue[] remoteIssues;
+		Iterable<JsonNode> remoteIssues;
 		try {
 			remoteIssues = remoteJiraManager.getIssuesFromJqlSearch("updated >= \"-" + period + "m\"");
 		} catch (Exception e) {
@@ -224,19 +212,19 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 		}
 
 		log.debug("Check each issue if we have it in SBS database");
-		for (RemoteIssue remoteIssue : remoteIssues) {
+		for (JsonNode remoteIssue : remoteIssues) {
 			try {
 				updateLink(remoteIssue);
 			} catch (Exception e) {
-				log.error("Updating link of JIRA issue failed. Issue key: " + remoteIssue.getKey(), e);
+				log.error("Updating link of JIRA issue failed. Issue key: " + remoteIssue.get("key").asText(), e);
 			}
 		}
 	}
 
-	private void updateLink(RemoteIssue remoteIssue) {
-		final String issueKey = remoteIssue.getKey();
+	private void updateLink(JsonNode remoteIssue) {
+		final String issueKey = remoteIssue.get("key").asText();
 
-		String[] values = remoteJiraManager.getForumReference(remoteIssue);
+		Set<String> values = remoteJiraManager.getForumReference(remoteIssue);
 
 		if (log.isInfoEnabled()) {
 			log.info("Remove All Related Issue in SBS related to ticket: " + issueKey);
@@ -249,19 +237,14 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 		issueLinkDAO.removeLinks(issueKey);
 
 		if (values != null) {
-			for (int i = 0; i < values.length; i++) {
-				String value = values[i];
-				if (value == null || value.isEmpty()) {
-					continue;
-				}
-
+			for (String value : values) {
 				JiveObject relatedIssueObject = getRelatedIssueJiveObject(value);
 				if (relatedIssueObject != null) {
 					log.info("Create new link (based on JIRA value)");
 					createLinkInDB(relatedIssueObject.getObjectType(), relatedIssueObject.getID(), issueKey);
 				} else {
 					if (log.isInfoEnabled()) {
-						log.info("JBoss Forum Reference is not community.jboss.org resource. URI: " + value);
+						log.info("JBoss Forum Reference is not a Jive resource. URI: " + value);
 					}
 				}
 
@@ -272,7 +255,7 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 
 	private String getSbsDomain() {
 		if (sbsDomain == null) {
-			sbsDomain = JiveGlobals.getJiveProperty("jboss.jira.sbsDomainToCheck", "community.jboss.org/");
+			sbsDomain = JiveGlobals.getJiveProperty("jboss.jira.sbsDomainToCheck", "developer.jboss.org/");
 		}
 		return sbsDomain;
 	}
@@ -305,44 +288,6 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 		}
 	}
 
-	@Override
-	public int syncJira2SBS() {
-		log.info("Full Sync JIRA -> SBS started");
-		issueLinkDAO.removeAllLinks();
-		issueLinkCache.clear();
-
-		int count = 0;
-
-		List<RemoteIssue> issues = jiraDAO.getIssuesWithForumReference();
-		for (RemoteIssue remoteIssue : issues) {
-			String[] values = remoteJiraManager.getForumReference(remoteIssue);
-			if (values != null) {
-				for (int i = 0; i < values.length; i++) {
-					String value = values[i];
-					if (value == null || value.isEmpty()) {
-						continue;
-					}
-
-					JiveObject relatedIssueObject = getRelatedIssueJiveObject(value);
-					if (relatedIssueObject != null) {
-						log.info("Create new link (based on JIRA value)");
-						createLinkInDB(relatedIssueObject.getObjectType(), relatedIssueObject.getID(), remoteIssue.getKey());
-						count++;
-					} else {
-						if (log.isInfoEnabled()) {
-							log.info("JBoss Forum Reference is not community.jboss.org resource. URI: " + value);
-						}
-					}
-				}
-			}
-		}
-
-		if (log.isInfoEnabled()) {
-			log.info("Full Sync JIRA -> SBS finished. Count: " + count);
-		}
-		return count;
-	}
-
 	public void setIssueLinkDAO(IssueLinkDAO issueLinkDAO) {
 		this.issueLinkDAO = issueLinkDAO;
 	}
@@ -353,14 +298,6 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 
 	public void setRemoteJiraManager(RemoteJiraManager remoteJiraManager) {
 		this.remoteJiraManager = remoteJiraManager;
-	}
-
-	public void setJiveContext(JiveContext jiveContext) {
-		this.jiveContext = jiveContext;
-	}
-
-	public void setJiraDAO(JiraDAO jiraDAO) {
-		this.jiraDAO = jiraDAO;
 	}
 
 	public void setIssueLinkCache(Cache<String, List<String>> issueLinkCache) {

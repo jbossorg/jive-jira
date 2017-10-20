@@ -10,6 +10,8 @@
 	height: 16px;
 	display: inline-block;
 	float: left;
+	top: 2px;
+	position: relative;
 }
 
 #jboss-jira-messages div {

@@ -9,7 +9,7 @@ Features
 1. Link and unlink any content in SBS (Document, Discussion, Blog post, Poll) with any JIRA ticket
 2. Honor JIRA permissions
 3. Synchronize SBS's related Issues and JIRA's JBoss Forum custom field
-4. Work with JIRA 5's WSDL and REST API
+4. Work with JIRA 5's REST API
 
 
 Parameters
@@ -63,15 +63,4 @@ To perform full reindex you need to pass step no. 5 from Installation steps
 
 1. Start full reindex of Related Issues in SBS admin console > System > Management > JIRA Integration.
 
-
-Development
------------
-
-### How to update JIRA's WSDL client
-
-Unfortunately it's not possible to use standard Java 5 JAX-WS wsimport because JIRA's WSDL is rpc/encoded type of WebService.
-
-SBS comes with Axis 1.4 and this tool can be used:
-
-		java org.apache.axis.wsdl.WSDL2Java -n https://issues.jboss.org/rpc/soap/jirasoapservice-v2?wsdl
 

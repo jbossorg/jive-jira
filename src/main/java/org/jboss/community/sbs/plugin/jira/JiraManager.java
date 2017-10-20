@@ -50,13 +50,5 @@ public interface JiraManager {
 	 */
 	public void updateLinks(int period);
 
-	/**
-	 * Synchronize Jira -> SBS<br>
-	 * All Related Issues in SBS are deleted and created based on JBoss Forum
-	 * Reference value
-	 *
-	 * @return count of synchronized Jira Issues
-	 */
-	public int syncJira2SBS();
 
 }

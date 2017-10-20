@@ -5,14 +5,15 @@
  */
 package org.jboss.community.sbs.plugin.jira.dwr;
 
-import com.jivesoftware.base.aaa.AuthenticationProvider;
-import com.jivesoftware.community.aaa.AnonymousUser;
-import com.jivesoftware.community.aaa.MethodNotSupportedException;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.jboss.community.sbs.plugin.jira.DbJiraManager.RESULT;
 import org.jboss.community.sbs.plugin.jira.JiraManager;
 
-import java.util.List;
+import com.jivesoftware.base.aaa.AuthenticationProvider;
+import com.jivesoftware.community.aaa.AnonymousUser;
+import com.jivesoftware.community.aaa.MethodNotSupportedException;
 
 /**
  * @author Libor Krzyzanek (lkrzyzan)
@@ -69,11 +70,6 @@ public class JiraManagerDWRProxy implements JiraManager {
 
 	@Override
 	public void updateLinks(int period) {
-		throw new MethodNotSupportedException("Not supported via DWR");
-	}
-
-	@Override
-	public int syncJira2SBS() {
 		throw new MethodNotSupportedException("Not supported via DWR");
 	}
 

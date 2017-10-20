@@ -2,23 +2,4 @@
 		"http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 
-	<package name="jira-actions-admin" namespace="/admin" extends="community-admin-default">
-		<action name="jira-integration-view" class="org.jboss.community.sbs.plugin.jira.struts.JiraAdminAction"
-				method="input">
-			<result name="input" type="freemarker">
-				/plugins/jira/resources/templates/admin/jira-integration.ftl
-			</result>
-		</action>
-
-		<action name="jira-integration-fullreindex" class="org.jboss.community.sbs.plugin.jira.struts.JiraAdminAction"
-				method="fullReindex">
-			<result name="input" type="freemarker">
-				/plugins/jira/resources/templates/admin/jira-integration.ftl
-			</result>
-			<result name="success" type="freemarker">
-				/plugins/jira/resources/templates/admin/jira-integration.ftl
-			</result>
-		</action>
-	</package>
-
 </struts>

@@ -131,7 +131,7 @@ jive.JiraApp.JiraView = function(containerID, options) {
           "</td>";
         <#if !user.anonymous>
         row += "<td align=\"right\" id=\"jboss-jira-remove-parent-" + data.key + "\"><a class=\"jboss-jira-remove-issue\" id=\"jboss-jira-remove-" + data.key + 
-               "\" href=\"javascript:void(0)\" title=\"" + options.removeIssueDesc + "\"><span class=\"jive-icon-med jive-icon-delete\" id=\"jboss-jira-remove-icon\"></span></a></td>";
+               "\" href=\"javascript:void(0)\" title=\"" + options.removeIssueDesc + "\"><span class=\"jive-icon-glyph icon-cancel-circle2\" id=\"jboss-jira-remove-icon\"></span></a></td>";
         $j("#issue-" + data.key).empty().append(row);
         if (statusID != 6) { 
           $j("#jboss-jira-remove-" + data.key).bind('click', function() {jbossJiraView.removeIssue(data.key)} );
@@ -209,7 +209,7 @@ jive.JiraApp.JiraView = function(containerID, options) {
       addIssueBoxValue = $j("#jboss-jira-add-input").val();
       $j.ajax({
           type: "GET",
-          url: jiraBaseURL + "/rest/api/1.0/issues/picker.json?query=" + addIssueBoxValue + "&currentIssueKey=&showSubTasks=true&showSubTaskParent=true&currentProjectId=",
+          url: jiraBaseURL + "/rest/api/2/issue/picker?query=" + addIssueBoxValue + "&showSubTasks=true&showSubTaskParent=true",
           dataType: "jsonp",
           jsonp: "jsonp-callback",
           jsonpCallback: "jbossJiraView.refreshPicker",

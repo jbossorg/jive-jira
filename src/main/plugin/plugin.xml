@@ -14,15 +14,4 @@
 
 	<css src="/resources/jira-plugin.css"/>
 
-	<components>
-		<component id="admin-console">
-			<tab id="system">
-				<section id="section-system">
-					<item id="system-jira-admin" name="plugin.jira.admin.name"
-						  url="jira-integration-view.jspa" description="plugin.jira.admin.description"/>
-				</section>
-			</tab>
-		</component>
-	</components>
-
 </plugin>

@@ -12,8 +12,6 @@ http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.
 		<property name="issueLinkDAO" ref="issueLinkDAO"/>
 		<property name="jiveObjectLoader" ref="jiveObjectLoader"/>
 		<property name="remoteJiraManager" ref="remoteJiraManager"/>
-		<property name="jiveContext" ref="jiveContext"/>
-		<property name="jiraDAO" ref="jiraDAO"/>
 		<property name="issueLinkCache" ref="issueLinkCache"/>
 		<property name="globalResourceResolver" ref="globalResourceResolver"/>
 	</bean>
@@ -37,12 +35,6 @@ http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.
 	</bean>
 
 	<bean id="issueLinkDAO" class="org.jboss.community.sbs.plugin.jira.dao.DbIssueLinkDAOImpl">
-		<property name="dataSource">
-			<util:property-path path="dataSourceFactory.dataSource"/>
-		</property>
-	</bean>
-
-	<bean id="jiraDAO" class="org.jboss.community.sbs.plugin.jira.dao.DbJiraDAO">
 		<property name="dataSource">
 			<util:property-path path="dataSourceFactory.dataSource"/>
 		</property>

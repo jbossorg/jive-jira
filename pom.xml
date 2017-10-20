@@ -8,7 +8,7 @@
 	<name>jira</name>
 	<description>Jive and JIRA integration</description>
 	<url>https://github.com/jbossorg/jive-jira</url>
-	<version>8.0.0</version>
+	<version>8.1.0</version>
 
 	<parent>
 		<groupId>com.jivesoftware.maven</groupId>
@@ -50,6 +50,8 @@
 	<properties>
 		<jive.min.version>${jive.version.min}</jive.min.version>
 		<jive.max.version>10.10.10.10</jive.max.version>
+		<jira.client.version>4.0.0</jira.client.version>
+		<atlassian.httpclient.version>0.23.0</atlassian.httpclient.version>
 	</properties>
 
 	<build>
