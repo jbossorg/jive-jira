@@ -5,9 +5,10 @@
  */
 package org.jboss.community.sbs.plugin.jira;
 
-import com.jivesoftware.community.JiveGlobals;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+
+import com.jivesoftware.community.JiveGlobals;
 
 /**
  * @author Libor Krzyzanek (lkrzyzan)
@@ -44,12 +45,12 @@ public class JiraForumReferenceCheckerThread extends Thread {
 			if (specialUpdateCountTo <= 0) {
 				periodInMinutes = JiveGlobals.getJiveIntProperty("jboss.jira.specialUpdateJiraTicketsPeriod", 360);
 				specialUpdateCountTo = getSpecialUpdateCountTo();
-				log.info("Special Update");
+				log.debug("Special Update");
 			} else {
 				specialUpdateCountTo--;
 			}
 
-			log.info("Update links from JIRA");
+			log.debug("Update links from JIRA");
 			try {
 				jiraManager.updateLinks(periodInMinutes);
 			} catch (Exception e) {

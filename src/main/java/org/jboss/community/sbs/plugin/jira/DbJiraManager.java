@@ -81,8 +81,8 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 
 	@Override
 	public List<String> getRelatedIssues(int objectType, long objectId) {
-		if (log.isInfoEnabled()) {
-			log.info("Get Related Issues for objectType: " + objectType + " id: " + objectId);
+		if (log.isDebugEnabled()) {
+			log.debug("Get Related Issues for objectType: " + objectType + " id: " + objectId);
 		}
 		final String cacheKey = getCacheKey(objectType, objectId);
 		List<String> issues = issueLinkCache.get(cacheKey);
@@ -201,7 +201,7 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 
 	@Override
 	public void updateLinks(int period) {
-		log.debug("Get links from JIRA");
+		log.trace("Get links from JIRA");
 
 		Iterable<JsonNode> remoteIssues;
 		try {
@@ -211,7 +211,7 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 			return;
 		}
 
-		log.debug("Check each issue if we have it in SBS database");
+		log.trace("Check each issue if we have it in SBS database");
 		for (JsonNode remoteIssue : remoteIssues) {
 			try {
 				updateLink(remoteIssue);
@@ -226,8 +226,8 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 
 		Set<String> values = remoteJiraManager.getForumReference(remoteIssue);
 
-		if (log.isInfoEnabled()) {
-			log.info("Remove All Related Issue in SBS related to ticket: " + issueKey);
+		if (log.isDebugEnabled()) {
+			log.debug("Remove All Related Issue in SBS related to ticket: " + issueKey);
 		}
 		// Remove those related issues in all cases and insert them afterwards
 		List<RelatedIssueBean> issuesInDB = issueLinkDAO.getByIssueID(issueKey);
@@ -243,8 +243,8 @@ public class DbJiraManager implements JiraManager, EventListener<ApplicationStat
 					log.info("Create new link (based on JIRA value)");
 					createLinkInDB(relatedIssueObject.getObjectType(), relatedIssueObject.getID(), issueKey);
 				} else {
-					if (log.isInfoEnabled()) {
-						log.info("JBoss Forum Reference is not a Jive resource. URI: " + value);
+					if (log.isDebugEnabled()) {
+						log.debug("JBoss Forum Reference is not a Jive resource. URI: " + value);
 					}
 				}
 
