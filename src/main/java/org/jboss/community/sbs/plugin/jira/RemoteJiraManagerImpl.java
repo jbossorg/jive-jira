@@ -92,7 +92,7 @@ public class RemoteJiraManagerImpl implements RemoteJiraManager {
         Map<String, Object> params = new HashMap<>();
         params.put("fields", fields);
 
-        getRestTemplate().put(getJiraUrl() + "/rest/api/2/issue/" + issueId + "?notifyUsers=false", params);
+        getRestTemplate().put(getJiraUrl() + "/rest/api/2/issue/" + issueId, params);
     }
 
     @Override
