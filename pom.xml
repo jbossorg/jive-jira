@@ -8,12 +8,12 @@
 	<name>jira</name>
 	<description>Jive and JIRA integration</description>
 	<url>https://github.com/jbossorg/jive-jira</url>
-	<version>8.1.0</version>
+	<version>9.0.0</version>
 
 	<parent>
 		<groupId>com.jivesoftware.maven</groupId>
 		<artifactId>jive-parent-pom</artifactId>
-		<version>8.0.4.0-3</version>
+		<version>9.0.2.1-0</version>
 	</parent>
 
 	<inceptionYear>2011</inceptionYear>

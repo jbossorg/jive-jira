@@ -5,15 +5,16 @@
  */
 package org.jboss.community.sbs.plugin.jira.dao;
 
-import com.jivesoftware.base.database.dao.JiveJdbcDaoSupport;
-import com.jivesoftware.base.database.sequence.SequenceManager;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+
+import com.jivesoftware.base.database.dao.JiveJdbcDaoSupport;
+import com.jivesoftware.base.database.sequence.SequenceManager;
 
 /**
  * @author Libor Krzyzanek (lkrzyzan)
@@ -61,13 +62,13 @@ public class DbIssueLinkDAOImpl extends JiveJdbcDaoSupport implements IssueLinkD
 		getSimpleJdbcTemplate().update("DELETE FROM jbossJiraIssueLink");
 	}
 
-	private static class StringMapper implements ParameterizedRowMapper<String> {
+	private static class StringMapper implements RowMapper<String> {
 		public String mapRow(ResultSet rs, int rowNum) throws SQLException {
 			return rs.getString(1);
 		}
 	}
 
-	private static class RelatedIssueBeanMapper implements ParameterizedRowMapper<RelatedIssueBean> {
+	private static class RelatedIssueBeanMapper implements RowMapper<RelatedIssueBean> {
 		public RelatedIssueBean mapRow(ResultSet rs, int rowNum) throws SQLException {
 			RelatedIssueBean o = new RelatedIssueBean();
 			o.setId(rs.getLong("id"));
